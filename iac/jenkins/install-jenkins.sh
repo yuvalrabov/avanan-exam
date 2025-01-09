@@ -6,3 +6,6 @@ rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
 yum install jenkins -y
 systemctl start jenkins
 systemctl enable jenkins
+yum install docker
+systemctl start docker
+systemctl enable docker
