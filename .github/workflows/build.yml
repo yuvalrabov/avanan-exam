@@ -33,7 +33,7 @@ jobs:
       
       - name: Set Output for Services
         id: set-output
-        run: echo "services=$(cat services.json)" >> $GITHUB_ENV
+        run: echo "services=$(cat services.json)" >> $GITHUB_OUTPUT
 
   build-and-push:
     name: Build and push Docker images
@@ -42,7 +42,7 @@ jobs:
       - ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson($GITHUB_ENV.services) }}
+        service: ${{ fromJson(needs.detect-changes.outputs.services) }}
 
     steps:
       - name: Checkout Repository
