@@ -22,8 +22,18 @@ jobs:
         run: |
           # Detect changed directories under 'services'
           services=$(git diff --name-only HEAD^ HEAD | grep '^services/' | cut -d'/' -f2 | sort | uniq)
-          echo "services=$services"
-          echo "::set-output name=services::$services"
+          if [ -z "$services" ]; then
+            echo "[]" > services.json
+          else
+            echo "[\"$(echo $services | tr ' ' '\",\"')\"]" > services.json
+          fi
+          echo "Services detected:"
+          cat services.json
+        shell: bash
+      
+      - name: Set Output for Services
+        id: set-output
+        run: echo "services=$(cat services.json)" >> $GITHUB_ENV
 
   build-and-push:
     name: Build and push Docker images
@@ -32,8 +42,7 @@ jobs:
       - ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson(needs.detect-changes.outputs.services) }}
-    continue-on-error: false
+        service: ${{ fromJson(env.services) }}
 
     steps:
       - name: Checkout Repository
