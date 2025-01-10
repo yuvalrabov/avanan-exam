@@ -48,7 +48,7 @@ def process_messages():
 
 
 if __name__ == "__main__":
-    print("Starting SQS to S3 service...")
+    print("Starting to upload messages from SQS to S3...")
     while True:
         process_messages()
         time.sleep(POLL_INTERVAL)

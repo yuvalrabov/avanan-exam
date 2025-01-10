@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = 'eu-north-1'
+        ECR_REPO = 'yuval-request-validator'
+        IMAGE_TAG = "${env.BUILD_NUMBER}" 
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Authenticate with ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+                '''
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $ECR_REPO:$IMAGE_TAG .'
+            }
+        }
+        stage('Push Docker Image to ECR') {
+            steps {
+                sh '''
+                docker tag $ECR_REPO:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+                '''
+            }
+        }
+    }
+}
+
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = 'eu-north-1'
+        ECS_CLUSTER = 'request-validator'
+        ECS_SERVICE = 'request-validator'
+        ECR_REPO = 'yuval-request-validator'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Update ECS Task Definition') {
+            steps {
+                sh '''
+                TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $ECS_SERVICE)
+                NEW_CONTAINER_DEFINITION=$(echo $TASK_DEFINITION | jq '.taskDefinition.containerDefinitions[0] | .image = "'$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG'"')
+                NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq '.taskDefinition | .containerDefinitions[0] = $NEW_CONTAINER_DEFINITION')
+                echo $NEW_TASK_DEFINITION > updated-task-def.json
+                aws ecs register-task-definition --cli-input-json file://updated-task-def.json
+                '''
+            }
+        }
+        stage('Update ECS Service') {
+            steps {
+                sh '''
+                aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
+                '''
+            }
+        }
+    }
+}
+
