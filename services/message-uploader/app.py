@@ -45,6 +45,8 @@ def process_messages():
             print(f"Deleted message {message_id} from SQS.")
         except Exception as e:
             print(f"Failed to process message {message_id}: {e}")
+        
+        # testing
 
 
 if __name__ == "__main__":
