@@ -44,9 +44,10 @@ jobs:
       - ubuntu-latest
     if: ${{ fromJson(needs.detect-changes.outputs.services) != '[]' }}
     
-    strategy:
-      matrix:
-        service: ${{ fromJson(needs.detect-changes.outputs.services) }}
+    # strategy:
+     # matrix:
+     #   service: ${{ fromJson(needs.detect-changes.outputs.services) }}
+    #continue-on-error: false
 
     steps:
       - name: Checkout Repository
@@ -59,9 +60,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        working-directory: services/${{ matrix.service }}
+        working-directory: services/message-uploader # services/${{ matrix.service }}
         run: |
-          docker build -t yuvalrabo/${{ matrix.service }}:${{ github.sha }} .
-          docker tag yuvalrabo/${{ matrix.service }}:${{ github.sha }} yuvalrabo/${{ matrix.service }}:latest
-          docker push yuvalrabo/${{ matrix.service }}:${{ github.sha }}
-          docker push yuvalrabo/${{ matrix.service }}:latest    
+          docker build -t yuvalrabo/message-uploader:${{ github.sha }} .
+          docker tag yuvalrabo/message-uploader:${{ github.sha }} yuvalrabo/message-uploader:latest
+          docker push yuvalrabo/message-uploader:${{ github.sha }}
+          docker push yuvalrabo/message-uploader:latest    
