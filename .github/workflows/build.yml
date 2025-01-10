@@ -42,7 +42,7 @@ jobs:
     needs: detect-changes
     runs-on: 
       - ubuntu-latest
-    #if: ${{ fromJson(needs.detect-changes.outputs.services) != '[]' }}
+    if: ${{ needs.detect-changes.outputs.services != '' }}
     
     # strategy:
      # matrix:
@@ -53,10 +53,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       
-      - name: test fromJson
-        run: |
-          echo '${{ needs.detect-changes.outputs.services }}'
-
       - name: Log in to Dockerhub"
         uses: docker/login-action@v3
         with:
