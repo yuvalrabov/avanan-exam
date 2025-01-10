@@ -42,7 +42,7 @@ jobs:
       - ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson(env.services) }}
+        service: ${{ fromJson($GITHUB_ENV.services) }}
 
     steps:
       - name: Checkout Repository
