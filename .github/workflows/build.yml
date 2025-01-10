@@ -55,7 +55,7 @@ jobs:
       
       - name: test fromJson
         run: |
-          echo '${{ fromJson(needs.detect-changes.outputs.services) }}'
+          echo '${{ needs.detect-changes.outputs.services }}'
 
       - name: Log in to Dockerhub"
         uses: docker/login-action@v3
