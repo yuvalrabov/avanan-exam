@@ -23,7 +23,7 @@ jobs:
         id: detect
         run: |
           # Detect changed directories under 'services'
-          services=$(git diff --name-only HEAD^ HEAD | grep '^services/' | cut -d'/' -f2 | sort | uniq)
+          services=$(git diff --name-only HEAD^ HEAD | grep '^services/' || true cut -d'/' -f2 | sort | uniq)
           if [ -z "$services" ]; then
             echo "[]" > services.json
           else
