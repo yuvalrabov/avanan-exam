@@ -46,8 +46,8 @@ jobs:
       matrix:
         service: ${{ fromJson(needs.detect-changes.outputs.services) }}
     continue-on-error: false
-    if: ${{ matrix.service != '' && matrix.service != null }}
-    
+    if: ${{ strategy.matrix.service != '' && strategy.matrix.service != null }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
