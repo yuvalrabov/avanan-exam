@@ -1,5 +1,5 @@
 output "vpc_id" {
-  value = aws_vpc.main_vpc.id
+  value = module.vpc.vpc_id
 }
 
 output "sqs_url" {
@@ -11,5 +11,5 @@ output "s3_bucket_name" {
 }
 
 output "lb_url" {
-  value = aws_lb.main_lb.dns_name
+  value = module.alb.lb_url
 }
