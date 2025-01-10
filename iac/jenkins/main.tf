@@ -7,7 +7,7 @@ resource "aws_instance" "jenkins" {
   instance_type = "t3.micro"
   key_name      = "jenkins-key-pair"
   tags = {
-    Name = "Jenkins-Server"   # Give the EC2 instance a Name tag
+    Name = "Jenkins-Server"   
   }
 
   security_groups = [aws_security_group.jenkins_sg.name]
