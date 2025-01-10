@@ -56,11 +56,11 @@ jobs:
     needs: detect-changes
     runs-on: 
       - ubuntu-latest
-    # if: ${{ needs.detect-changes.outputs.services != '' }}
+    if: ${{ needs.detect-changes.outputs.services != '' }}
     
-    #strategy:
-    #  matrix:
-    #    service: ${{ fromJson(needs.detect-changes.outputs.services) }}
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.detect-changes.outputs.services) }}
     #continue-on-error: false
 
     steps:
