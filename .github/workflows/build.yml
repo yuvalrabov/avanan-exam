@@ -22,13 +22,27 @@ jobs:
       - name: Detect Changed Services
         id: detect
         run: |
-          # Detect changed directories under 'services'
-          services=$(git diff --name-only HEAD^ HEAD | grep '^services/' || true cut -d'/' -f2 | sort | uniq)
-          if [ -z "$services" ]; then
+          # Get the file paths with `git diff`
+          git_diff_output=$(git diff --name-only HEAD^ HEAD)
+          echo "Git diff output: $git_diff_output"
+
+          # Filter for changes under the 'services' directory
+          services=$(echo "$git_diff_output" | grep '^services/' || true)
+          echo "Filtered services: $services"
+
+          # Extract the service names (directory names under 'services')
+          services_list=$(echo "$services" | cut -d'/' -f2 | sort | uniq)
+          echo "Services list: $services_list"
+
+          # Check if any services were found
+          if [ -z "$services_list" ]; then
             echo "[]" > services.json
           else
-            echo "[\"$(echo $services | tr ' ' '\",\"')\"]" > services.json
+            # Format the services list into a JSON array
+            echo "[\"$(echo $services_list | tr ' ' '\",\"')\"]" > services.json
           fi
+
+          # Output the final list of services detected
           echo "Services detected:"
           cat services.json
         shell: bash
