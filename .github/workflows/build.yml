@@ -42,7 +42,7 @@ jobs:
     needs: detect-changes
     runs-on: 
       - ubuntu-latest
-    if: ${{ needs.detect-changes.outputs.services != '' }}
+    # if: ${{ needs.detect-changes.outputs.services != '' }}
     
     strategy:
       matrix:
@@ -50,6 +50,10 @@ jobs:
     #continue-on-error: false
 
     steps:
+      - name: checking services
+        run: |
+          echo ${{ needs.detect-changes.outputs.services }}
+          
       - name: Checkout Repository
         uses: actions/checkout@v4
       
