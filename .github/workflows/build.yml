@@ -42,11 +42,12 @@ jobs:
     needs: detect-changes
     runs-on: 
       - ubuntu-latest
+    if: ${{ fromJson(needs.detect-changes.outputs.services) != '[]'
+    
     strategy:
       matrix:
         service: ${{ fromJson(needs.detect-changes.outputs.services) }}
     continue-on-error: false
-    if: ${{ strategy.matrix.service != '' && strategy.matrix.service != null }}
 
     steps:
       - name: Checkout Repository
