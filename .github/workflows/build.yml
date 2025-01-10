@@ -47,7 +47,6 @@ jobs:
     strategy:
       matrix:
         service: ${{ fromJson(needs.detect-changes.outputs.services) }}
-    continue-on-error: false
 
     steps:
       - name: Checkout Repository
