@@ -7,15 +7,12 @@ This project implements a system of two containerized microservices using AWS se
 ## Table of Contents
 
 - [System Overview](#system-overview)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
+- [Repository Structure](#repository-structure)
 - [Services](#services)
   - [Request Validator](#request-validator)
   - [Message Uploader](#message-uploader)
-- [CI/CD Pipelines](#cicd-pipelines)
-- [Testing](#testing)
-- [Monitoring](#monitoring)
-- [Repository Structure](#repository-structure)
+- [IaC](#iac)
+- [CI/CD Pipeline](#cicd-pipeline)
 
 ---
 
@@ -26,34 +23,40 @@ The project includes:
    - **Request Validator**: Validates a token and publishes payloads to an SQS queue.
    - **Message Uploader**: Consumes messages from the SQS queue and uploads them to an S3 bucket.
 2. Infrastructure as Code using Terraform.
-3. CI/CD pipelines:
-   - CI: Builds Docker images and pushes them to DockerHub/ECR.
-   - CD: Deploys services to ECS.
-4. Optional features: Tests and monitoring with Grafana/Prometheus.
+3. CI/CD pipeline using GitHub Actions.
 
 ---
 
-## Prerequisites
+## Repository Structure
 
-- **AWS Account** (Free Tier)
-- AWS CLI configured with access keys.
-- Terraform installed.
-- Docker installed.
-- Jenkins or another CI/CD tool installed.
+```
+│   README.md
+├───.github
+│   └───workflows
+├───iac
+│   └───modules
+└───services
+    ├───request-validator
+    └───message-uploader
+```
 
 ---
-
-## Installation
-
-1. **Clone the Repository**:
-   ```bash
-   git clone <repo-url>
-   cd <repo-directory>
-
 ## Services
 
+```
+├───services
+    ├───request-validator
+    │       app.py
+    │       Dockerfile
+    │       requirements.txt
+    └───message-uploader
+            app.py
+            Dockerfile
+            requirements.txt
+```
+
 ### Request Validator
-- **Description:** A REST API receiving requests via an ELB, validating a token, and publishing the payload to an SQS queue.
+- **Description:** A REST API receiving requests via an ALB, validating a token, and publishing the payload to an SQS queue.
 - **Request Example:**
 ```
 {
@@ -66,10 +69,53 @@ The project includes:
   "token": "sometoken"
 }
 ```
-- **Validation**
-    - The service will validate the token passed in the request against a stored value in AWS SSM
+- **Validation:**
+    - The service would validate the token passed in the request against a stored value in AWS SSM
     - The request must contain all 4 data fields mentioned in the example: email_subject, email_sender, email_timestream & email_content. 
 
 ### Message Uploader
 - **Description:** Periodically pulls the SQS requests queue and uploads messages to the S3 bucket. 
-- **interval:** Pulls every X seconds (configurable in `.env`).
+- **interval:** Pulls every X seconds (configurable in `.env`, default is 5 minutes).
+
+---
+
+## IaC
+
+```
+├───iac
+│   │   main.tf
+│   │   outputs.tf
+│   │   variables.tf
+│   └───modules
+│       ├───alb
+│       │       main.tf
+│       │       outputs.tf
+│       │       variables.tf
+│       ├───ecs
+│       │       main.tf
+│       │       outputs.tf
+│       │       variables.tf
+│       └───vpc
+│               main.tf
+│               outputs.tf
+│               variables.tf
+```
+
+The AWS infrastructure is managed using Terraform. 
+The iac directory contains some modules, as well as the root configuration. 
+
+---
+
+## CI/CD Pipeline
+
+```
+├───.github
+│   └───workflows
+│           build-and-deploy.yml
+```
+
+The CI/CD process is built with GitHub Actions, in one Workflow. 
+The Workflow contains 3 jobs:
+   - Detect Changes: Using selective build mechanism to promote idempotency in the CI/CD process, making sure only changed components would be triggered.
+   - Build: Builds Docker images and pushes them to DockerHub. This job would be triggered only if the previous job detected changes in the services code.
+   - Deploy: Deploys Terraform to AWS.
