@@ -88,7 +88,8 @@ jobs:
         
       - name: Debug - Print Image Digest
         run: |
-          echo "Image digest for ${{ matrix.service }}: ${{ env.${{ matrix.service }} }}"
+          SERVICE=${{ matrix.service }}
+          echo "Image digest for $SERVICE: ${!SERVICE}"
 
   deploy:
     name: Deploy changes to AWS
