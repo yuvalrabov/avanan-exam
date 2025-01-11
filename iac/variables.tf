@@ -28,8 +28,8 @@ variable "subnets" {
 variable "task_definitions" {
   default = [
     {
-      name          = "request-validator-task"
-      image         = "329599656414.dkr.ecr.eu-north-1.amazonaws.com/request-validator:latest"
+      name          = "request-validator-container"
+      image         = "yuvalrabo/request-validator:latest"
       cpu           = 256
       memory        = 512
       port_mappings = [
@@ -37,8 +37,8 @@ variable "task_definitions" {
       ]
     },
     {
-      name          = "message-uploader-task"
-      image         = "329599656414.dkr.ecr.eu-north-1.amazonaws.com/message-uploader:latest"
+      name          = "message-uploader-container"
+      image         = "yuvalrabo/message-uploader:latest"
       cpu           = 256
       memory        = 512
       port_mappings = [

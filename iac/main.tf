@@ -6,6 +6,7 @@ terraform {
     encrypt = true
   }  
 }
+
 provider "aws" {
   region = var.aws_region 
 }
@@ -50,6 +51,7 @@ module "alb" {
   load_balancer_name = "main-load-balancer"
 }
 
+# ECS services
 module "ecs" {
   source = "./modules/ecs"
   cluster_name = "ecs-cluster"
