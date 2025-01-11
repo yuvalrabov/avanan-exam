@@ -1,4 +1,4 @@
-name: build
+name: build-and-deploy
 
 on:
   push:
@@ -84,3 +84,20 @@ jobs:
           docker tag yuvalrabo/${{ matrix.service }}:${{ github.sha }} yuvalrabo/${{ matrix.service }}:latest
           docker push yuvalrabo/${{ matrix.service }}:${{ github.sha }}
           docker push yuvalrabo/${{ matrix.service }}:latest    
+
+  deploy:
+    name: Deploy changes to AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-north-1
+          role-to-assume: arn:aws:iam::329599656414:role/gh-actions-role
+        
+
+
