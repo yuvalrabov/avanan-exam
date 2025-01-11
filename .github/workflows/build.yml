@@ -39,10 +39,6 @@ jobs:
             echo "[]" > services.json
           else
             # Format the services list into a JSON array
-            #IFS=$'\n' read -rd '' -a services_array <<< "$(echo -e "$services_list")"
-            #jq -c -n '$ARGS.positional' --args "${mylist[@]}" > services.json
-            
-            #echo "[\"$(echo "$services_list" | tr '\n' ' ' | tr ' ' '\",\"' | sed 's/,$//')\"]" > services.json
             echo "[\"$(echo "$services_list" | sed ':a;N;$!ba;s/\n/","/g')\"]" > services.json
           fi
 
