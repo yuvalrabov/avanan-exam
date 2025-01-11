@@ -2,6 +2,8 @@ resource "aws_ecs_cluster" "cluster" {
   name = var.cluster_name
 }
 
+
+
 resource "aws_iam_role" "ecs_task_role" {
   name = "ecs-task-role"
 
@@ -17,6 +19,29 @@ resource "aws_iam_role" "ecs_task_role" {
       }
     ]
   })
+}
+
+# IAM policy to allow ECS Exec
+resource "aws_iam_policy" "ecs_exec_policy" {
+  name        = "ecs-exec-policy"
+  description = "Policy to allow ECS Exec commands"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "ecs:ExecuteCommand"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach ECS Exec policy to the ECS task role
+resource "aws_iam_role_policy_attachment" "ecs_exec_policy_attachment" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.ecs_exec_policy.arn
 }
 
 resource "aws_ecs_task_definition" "task_definition" {
@@ -36,6 +61,7 @@ resource "aws_ecs_task_definition" "task_definition" {
     memory       = var.task_definitions[count.index].memory
     essential    = true
     portMappings = var.task_definitions[count.index].port_mappings
+    execEnabled   = true
   }])
 }
 
