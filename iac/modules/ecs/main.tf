@@ -83,7 +83,7 @@ resource "aws_ecs_service" "service" {
   }
 
   dynamic "load_balancer" {
-    for_each = var.services[count.index].target_group_arn != "" ? [1] : []
+    for_each = var.services[count.index].name == "request-validator-service" ? [1] : []
     content {
       target_group_arn = var.services[count.index].target_group_arn
       container_name   = var.services[count.index].container_name

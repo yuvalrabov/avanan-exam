@@ -16,7 +16,7 @@ PARAMETER_NAME = os.getenv('PARAMETER_NAME')
 # Load token from SSM Parameter Store
 def get_token_from_ssm():
     try:
-        parameter = ssm_client.get_parameter(Name="ValidationToken", WithDecryption=True)
+        parameter = ssm_client.get_parameter(Name=PARAMETER_NAME, WithDecryption=True)
         return parameter['Parameter']['Value']
     except Exception as e:
         app.logger.error(f"Failed to retrieve parameter: {e}")
@@ -24,7 +24,7 @@ def get_token_from_ssm():
 
 TOKEN = get_token_from_ssm()
 
-@app.route('/process', methods=['POST'])
+@app.route('/', methods=['POST'])
 def process_request():
     try:
         # Get JSON payload
@@ -52,4 +52,4 @@ def process_request():
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 80)))
+    app.run(host='0.0.0.0', port=80)

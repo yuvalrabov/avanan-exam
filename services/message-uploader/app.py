@@ -6,10 +6,9 @@ import os
 sqs_client = boto3.client('sqs', region_name='eu-north-1')
 s3_client = boto3.client('s3', region_name='eu-north-1')
 
-# Environment variables
 SQS_QUEUE_URL = os.getenv('SQS_QUEUE_URL')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
-POLL_INTERVAL = int(os.getenv('POLL_INTERVAL', 60))  # Default to 60 seconds
+POLL_INTERVAL = int(os.getenv('POLL_INTERVAL', 300))  # Default to 5 minutes (300 seconds)
 
 
 def process_messages():
@@ -44,8 +43,7 @@ def process_messages():
             )
             print(f"Deleted message {message_id} from SQS.")
         except Exception as e:
-            print(f"Failed to process message {message_id}: {e}")
-        #testing digest one 
+            print(f"Failed to process message {message_id}: {e}") 
 
 
 if __name__ == "__main__":
