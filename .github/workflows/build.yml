@@ -43,7 +43,7 @@ jobs:
             #jq -c -n '$ARGS.positional' --args "${mylist[@]}" > services.json
             
             #echo "[\"$(echo "$services_list" | tr '\n' ' ' | tr ' ' '\",\"' | sed 's/,$//')\"]" > services.json
-            echo "[\"$(echo "$services_list" | sed 's/\n/","/g')\"]" > services.json
+            echo "[\"$(echo "$services_list" | sed ':a;N;$!ba;s/\n/","/g')\"]" > services.json
           fi
 
           # Output the final list of services detected
