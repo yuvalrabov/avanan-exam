@@ -73,6 +73,9 @@ resource "aws_ecs_service" "service" {
   desired_count    = var.services[count.index].desired_count
   launch_type      = "FARGATE"
   force_new_deployment = true
+  triggers = {
+    redeployment = plantimestamp()
+  }
 
   network_configuration {
     subnets          = var.vpc_subnet_ids
