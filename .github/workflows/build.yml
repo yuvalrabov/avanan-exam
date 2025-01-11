@@ -102,10 +102,13 @@ jobs:
           role-to-assume: arn:aws:iam::329599656414:role/gh-actions-role
       
       - name: Terraform init
+        working-directory: iac/
         run: terraform init
 
       - name: Terraform plan
+        working-directory: iac/
         run: terraform plan
 
       - name: Terraform apply
+        working-directory: iac/
         run: terraform apply -auto-approve
