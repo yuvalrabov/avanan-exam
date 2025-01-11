@@ -89,7 +89,7 @@ jobs:
     if: always()
     needs: 
       - detect-changes
-      - build-and-deploy
+      - build-and-push
     permissions:
       id-token: write
       contents: read
