@@ -86,7 +86,7 @@ jobs:
           docker push yuvalrabo/${{ matrix.service }}:latest
           # IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' yuvalrabo/${{ matrix.service }}:${{ github.sha }} | cut -d'@' -f2)
           SERVICE_NAME=${{ matrix.service }} | sed 's/[^a-zA-Z0-9_]/_/g'
-          echo "${SERVICE_NAME}=${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "${SERVICE_NAME}=${{ github.sha }}"
         
       - name: Debug - Print Image Digest
         run: |
