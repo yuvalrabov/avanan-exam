@@ -40,7 +40,8 @@ jobs:
           else
             # Format the services list into a JSON array
             IFS=$'\n' read -rd '' -a services_array <<< "$(echo -e "$services_list")"
-            echo ${services_array[@]} > services.json
+            jq -c -n '$ARGS.positional' --args "${mylist[@]}" > services.json
+            
             #echo "[\"$(echo "$services_list" | tr '\n' ' ' | tr ' ' '\",\"' | sed 's/,$//')\"]" > services.json
           fi
 
