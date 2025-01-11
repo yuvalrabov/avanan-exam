@@ -22,7 +22,8 @@ def get_token_from_ssm():
         app.logger.error(f"Failed to retrieve parameter: {e}")
         return None
 
-TOKEN = get_token_from_ssm()
+#TOKEN = get_token_from_ssm()
+TOKEN = "eevee"
 
 @app.route('/', methods=['GET'])
 def health():
