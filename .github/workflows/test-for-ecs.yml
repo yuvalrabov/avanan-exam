@@ -11,6 +11,7 @@ jobs:
       - name: pull image
         run: |
           docker pull yuvalrabo/request-validator
-          docker run -it yuvalrabo/request-validator
+          docker run --name test yuvalrabo/request-validator
+          docker logs test
 
 
