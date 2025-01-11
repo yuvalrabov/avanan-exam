@@ -77,6 +77,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
+        id: build-image
         working-directory: services/${{ matrix.service }}
         run: |
           docker build -t yuvalrabo/${{ matrix.service }}:${{ github.sha }} .
@@ -85,12 +86,11 @@ jobs:
           docker push yuvalrabo/${{ matrix.service }}:latest
           IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' yuvalrabo/${{ matrix.service }}:${{ github.sha }} | cut -d'@' -f2)
           SERVICE_NAME=${{ matrix.service }} | sed 's/[^a-zA-Z0-9_]/_/g'
-          echo "${SERVICE_NAME}=$IMAGE_DIGEST" >> $GITHUB_ENV
+          echo "${SERVICE_NAME}=$IMAGE_DIGEST" >> $GITHUB_OUTPUT
         
       - name: Debug - Print Image Digest
         run: |
-          SERVICE_NAME=${{ matrix.service }} | sed 's/[^a-zA-Z0-9_]/_/g'
-          echo "Image digest for $SERVICE_NAME: ${!SERVICE_NAME}"
+          echo "Image digest for ${{ steps.build-image.outputs.SERVICE_NAME }}"
 
   deploy:
     name: Deploy changes to AWS
