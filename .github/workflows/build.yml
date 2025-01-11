@@ -11,7 +11,7 @@ jobs:
     name: Detect Changes in Services
     runs-on: ubuntu-latest
     outputs:
-      services: ${{ steps.detect.outputs.services }}
+      services: ${{ steps.set-output.outputs.services }}
 
     steps:
       - name: Checkout Repository
