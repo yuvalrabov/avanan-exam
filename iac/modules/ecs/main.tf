@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   memory                  = var.task_definitions[count.index].memory
 
   container_definitions = jsonencode([{
-    name         = var.task_definitions[count.index].name
+    name         = var.services[count.index].container_name
     image        = var.task_definitions[count.index].image
     cpu          = var.task_definitions[count.index].cpu
     memory       = var.task_definitions[count.index].memory

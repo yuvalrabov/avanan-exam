@@ -28,7 +28,7 @@ variable "subnets" {
 variable "task_definitions" {
   default = [
     {
-      name          = "request-validator-container"
+      name          = "request-validator-task"
       image         = "yuvalrabo/request-validator:latest"
       cpu           = 256
       memory        = 512
@@ -37,7 +37,7 @@ variable "task_definitions" {
       ]
     },
     {
-      name          = "message-uploader-container"
+      name          = "message-uploader-task"
       image         = "yuvalrabo/message-uploader:latest"
       cpu           = 256
       memory        = 512
