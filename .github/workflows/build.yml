@@ -39,7 +39,9 @@ jobs:
             echo "[]" > services.json
           else
             # Format the services list into a JSON array
-            echo "[\"$(echo "$services_list" | tr '\n' ' ' | tr ' ' '\",\"' | sed 's/,$//')\"]" > services.json
+            IFS=$'\n' read -r -a services_array <<< "$services_list"
+            echo $services_array
+            #echo "[\"$(echo "$services_list" | tr '\n' ' ' | tr ' ' '\",\"' | sed 's/,$//')\"]" > services.json
           fi
 
           # Output the final list of services detected
