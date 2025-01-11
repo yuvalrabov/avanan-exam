@@ -24,7 +24,18 @@ def get_token_from_ssm():
 
 TOKEN = get_token_from_ssm()
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET'])
+def health():
+    if health_status:
+        resp = jsonify(health="healthy")
+        resp.status_code = 200
+    else:
+        resp = jsonify(health="unhealthy")
+        resp.status_code = 500
+
+    return resp
+
+@app.route('/process', methods=['POST'])
 def process_request():
     try:
         # Get JSON payload
