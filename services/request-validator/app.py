@@ -51,7 +51,7 @@ def process_request():
     except Exception as e:
         app.logger.error(f"Error processing request: {e}")
         return jsonify({"error": "Internal server error"}), 500
-    # test 2 se
+    # test 2 s
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
