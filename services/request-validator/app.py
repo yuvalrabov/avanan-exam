@@ -16,7 +16,7 @@ PARAMETER_NAME = os.getenv('PARAMETER_NAME')
 # Load token from SSM Parameter Store
 def get_token_from_ssm():
     try:
-        parameter = ssm_client.get_parameter(Name=PARAMETER_NAME, WithDecryption=True)
+        parameter = ssm_client.get_parameter(Name="ValidationToken", WithDecryption=True)
         return parameter['Parameter']['Value']
     except Exception as e:
         app.logger.error(f"Failed to retrieve parameter: {e}")
