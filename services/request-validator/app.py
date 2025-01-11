@@ -10,7 +10,6 @@ app = Flask(__name__)
 sqs_client = boto3.client('sqs', region_name=os.getenv('AWS_REGION', 'eu-north-1'))
 ssm_client = boto3.client('ssm', region_name=os.getenv('AWS_REGION', 'eu-north-1'))
 
-# Environment variables
 QUEUE_URL = os.getenv('SQS_QUEUE_URL')
 PARAMETER_NAME = os.getenv('PARAMETER_NAME')
 
@@ -54,4 +53,4 @@ def process_request():
     # test
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 80)))

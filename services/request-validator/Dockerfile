@@ -7,10 +7,10 @@ COPY app.py ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5000
+EXPOSE 80
 
 ENV AWS_REGION=eu-north-1
-ENV PORT=5000
+ENV PORT=80
 ENV PARAMETER_NAME=ValidationToken
 
 CMD ["python", "app.py"]
