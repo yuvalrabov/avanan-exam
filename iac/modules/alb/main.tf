@@ -36,7 +36,7 @@ resource "aws_lb_target_group" "main_target_group" {
   target_type = "ip"
 
   health_check {
-    interval            = 5
+    interval            = 10
     path                = "/"
     protocol            = "HTTP"
     timeout             = 5
