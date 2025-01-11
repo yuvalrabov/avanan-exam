@@ -85,6 +85,10 @@ jobs:
           docker push yuvalrabo/${{ matrix.service }}:latest    
 
   deploy:
+    if: always()
+    needs: 
+      - detect-changes
+      - build-and-deploy
     permissions:
       id-token: write
       contents: read
