@@ -2,6 +2,12 @@ variable "cluster_name" {
   type = string
 }
 
+variable "aws_region" {
+  type = string
+  default = "eu-north-1"
+  
+}
+
 variable "task_definitions" {
   type = list(object({
     name            = string
@@ -24,4 +30,9 @@ variable "services" {
 
 variable "vpc_subnet_ids" {
   type = list(string)
+}
+
+variable "ssm_parameter_name" {
+  type = string
+  default = "ValidationToken" 
 }

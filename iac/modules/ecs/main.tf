@@ -2,7 +2,7 @@ resource "aws_ecs_cluster" "cluster" {
   name = var.cluster_name
 }
 
-
+data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "ecs_task_role" {
   name = "ecs-task-role"
@@ -42,6 +42,30 @@ resource "aws_iam_policy" "ecs_exec_policy" {
 resource "aws_iam_role_policy_attachment" "ecs_exec_policy_attachment" {
   role       = aws_iam_role.ecs_task_role.name
   policy_arn = aws_iam_policy.ecs_exec_policy.arn
+}
+
+# IAM policy for SSM Parameter Store access
+resource "aws_iam_policy" "ssm_parameter_access" {
+  name        = "ssm-parameter-access-policy"
+  description = "Policy to allow access to specific SSM Parameter Store parameters"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "ssm:GetParameter"
+        Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.ssm_parameter_name}"
+      }
+    ]
+  })
+}
+
+# Attach SSM Parameter Store access policy to the ECS task role
+resource "aws_iam_role_policy_attachment" "ssm_access_policy_attachment" {
+  for_each = { for idx, service in var.services : idx => service if service.name == "request-validator-service" }
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.ssm_parameter_access.arn
 }
 
 resource "aws_ecs_task_definition" "task_definition" {

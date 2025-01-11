@@ -75,5 +75,5 @@ resource "aws_sqs_queue" "email_queue" {
 
 # S3 Bucket (message uploader service uploads data here)
 resource "aws_s3_bucket" "email_storage" {
-  bucket = "email-storage-bucket-unique-id"  # Ensure the bucket name is globally unique
+  bucket = "email-storage-bucket-unique-id" 
 }

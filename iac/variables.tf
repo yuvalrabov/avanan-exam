@@ -67,3 +67,8 @@ variable "services" {
   ]
 }
 
+variable "ssm_parameter_name" {
+  type = string
+  default = "ValidationToken" 
+}
+
