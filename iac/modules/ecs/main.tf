@@ -46,6 +46,7 @@ resource "aws_ecs_service" "service" {
   task_definition  = aws_ecs_task_definition.task_definition[count.index].arn
   desired_count    = var.services[count.index].desired_count
   launch_type      = "FARGATE"
+  force_new_deployment = true
 
   network_configuration {
     subnets          = var.vpc_subnet_ids
