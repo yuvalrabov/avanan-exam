@@ -24,24 +24,9 @@ def get_token_from_ssm():
 
 TOKEN = get_token_from_ssm()
 
-health_status = True
-
-@app.route('/toggle')
-def toggle():
-    global health_status
-    health_status = not health_status
-    return jsonify(health_value=health_status)
-
 @app.route('/', methods=['GET'])
 def health():
-    if health_status:
-        resp = jsonify(health="healthy")
-        resp.status_code = 200
-    else:
-        resp = jsonify(health="unhealthy")
-        resp.status_code = 500
-
-    return resp
+    return jsonify(status="healthy"), 200
 
 @app.route('/process', methods=['POST'])
 def process_request():
