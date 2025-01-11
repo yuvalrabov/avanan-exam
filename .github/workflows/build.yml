@@ -92,6 +92,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
       - name: Login to terraform
         uses: hashicorp/setup-terraform@v3
 
