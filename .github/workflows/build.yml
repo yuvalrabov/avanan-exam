@@ -56,7 +56,7 @@ jobs:
     needs: detect-changes
     runs-on: 
       - ubuntu-latest
-    if: ${{ needs.detect-changes.outputs.services != [] }}
+    if: ${{ needs.detect-changes.outputs.services != '[]' }}
     
     strategy:
       matrix:
